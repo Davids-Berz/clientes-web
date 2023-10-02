@@ -11,7 +11,7 @@ export class FormComponent implements OnInit {
   constructor() {
   }
 
-  private cliente: Cliente;
+  private cliente: Cliente = new Cliente();
   private titulo = 'Crear Cliente';
 
   ngOnInit() {
@@ -19,6 +19,6 @@ export class FormComponent implements OnInit {
 
   public create(): void {
     console.log('Clicked!');
-    console.log('cliente:' + this.cliente);
+    console.log(this.cliente);
   }
 }
