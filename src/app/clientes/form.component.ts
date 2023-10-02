@@ -1,5 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Cliente} from './cliente';
+import {ClienteService} from './cliente.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-form',
@@ -8,7 +10,8 @@ import {Cliente} from './cliente';
 })
 export class FormComponent implements OnInit {
 
-  constructor() {
+  constructor(private clienteService: ClienteService,
+              private router: Router) {
   }
 
   private cliente: Cliente = new Cliente();
@@ -18,7 +21,8 @@ export class FormComponent implements OnInit {
   }
 
   public create(): void {
-    console.log('Clicked!');
-    console.log(this.cliente);
+    this.clienteService.create(this.cliente).subscribe(
+      respone => this.router.navigate(['/clientes'])
+    );
   }
 }
