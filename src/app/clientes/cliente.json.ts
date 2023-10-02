@@ -1,6 +1,6 @@
-import {Clientes} from './cliente';
+import {Cliente} from './cliente';
 
-export const CLIENTES: Clientes[] = [
+export const CLIENTES: Cliente[] = [
   {id: 1, nombre: 'David', apellido: 'Saldivar', createAt: '2023-01-01', email: 'Davids.berz@gmail.com'},
   {id: 2, nombre: 'Valeria', apellido: 'Perez', createAt: '2022-08-14', email: 'valeria.p@email.com'},
   {id: 3, nombre: 'Carlos', apellido: 'García', createAt: '2023-05-20', email: 'c.garcia@email.com'},
