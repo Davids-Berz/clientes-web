@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Cliente} from './cliente';
-import {Observable, pipe} from 'rxjs';
+import {Observable} from 'rxjs';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {map, tap} from 'rxjs/operators';
 
@@ -32,6 +32,17 @@ export class ClienteService {
     ).pipe(
       tap(response => console.log(response))
     );
+  }
+
+  getCliente(id): Observable<Cliente> {
+    return this.http.get<Cliente>(`${this.urlEndPoint}/${id}`);
+  }
+
+  update(cliente: Cliente): Observable<Cliente> {
+    return this.http.put(`${this.urlEndPoint}/${cliente.id}`, cliente, {headers: this.httpHeaders})
+      .pipe(
+        map(response => response as Cliente)
+      );
   }
 
 }
