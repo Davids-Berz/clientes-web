@@ -1,15 +1,18 @@
 import {Injectable} from '@angular/core';
 import {Cliente} from './cliente';
-import {Observable} from 'rxjs';
+import {Observable, throwError} from 'rxjs';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {map, tap} from 'rxjs/operators';
+import {catchError, map, tap} from 'rxjs/operators';
+import Swal from 'sweetalert2';
+import {Router} from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ClienteService {
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient,
+              private router: Router) {
   }
 
   private urlEndPoint = 'http://localhost:8080/api/clientes';
@@ -27,7 +30,17 @@ export class ClienteService {
   }
 
   create(cliente: Cliente): Observable<Cliente> {
-    return this.http.post(this.urlEndPoint, cliente, {headers: this.httpHeaders}).pipe(
+    return this.http.post(this.urlEndPoint, cliente, {headers: this.httpHeaders})
+      .pipe(
+        catchError(e => {
+          Swal.fire(
+            e.error.mensaje,
+            e.error.error,
+            'error'
+          );
+          return throwError(e);
+        }))
+      .pipe(
       map(response => response as Cliente)
     ).pipe(
       tap(response => console.log(response))
@@ -35,7 +48,20 @@ export class ClienteService {
   }
 
   getCliente(id): Observable<Cliente> {
-    return this.http.get<Cliente>(`${this.urlEndPoint}/${id}`);
+    return this.http.get<Cliente>(`${this.urlEndPoint}/${id}`)
+      .pipe(
+        catchError(e => {
+          console.log(e);
+          this.router.navigate(['/clientes']);
+          Swal.fire(
+            'Error al buscar al cliente',
+            e.error.mensaje,
+            'error'
+          );
+          return throwError(e);
+        })
+      ).pipe(
+        map(response => response as Cliente));
   }
 
   update(cliente: Cliente): Observable<Cliente> {
@@ -46,9 +72,20 @@ export class ClienteService {
   }
 
   delete(id: number): Observable<Cliente> {
-    return this.http.delete(`${this.urlEndPoint}/${id}`, {headers: this.httpHeaders}).pipe(
-      map(response => response as Cliente)
-    );
+    return this.http.delete(`${this.urlEndPoint}/${id}`, {headers: this.httpHeaders})
+      .pipe(
+        catchError(e => {
+          console.log(e);
+          this.router.navigate(['/clientes']);
+          Swal.fire(
+            'Error al eliminar el cliente',
+            e.error.mensaje,
+            'error'
+          );
+          return throwError(e);
+        })).pipe(
+          map(response => response as Cliente)
+        );
   }
 
 }
