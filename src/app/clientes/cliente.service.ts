@@ -34,6 +34,11 @@ export class ClienteService {
       .pipe(
         map((response: any) => response.cliente as Cliente),
         catchError(e => {
+
+          if (e.status === 400) {
+            return throwError(e);
+          }
+
           Swal.fire(
             e.error.mensaje,
             e.error.error,
@@ -42,8 +47,8 @@ export class ClienteService {
           return throwError(e);
         }))
       .pipe(
-      tap(response => console.log(response))
-    );
+        tap(response => console.log(response))
+      );
   }
 
   getCliente(id): Observable<Cliente> {
@@ -66,7 +71,20 @@ export class ClienteService {
   update(cliente: Cliente): Observable<Cliente> {
     return this.http.put(`${this.urlEndPoint}/${cliente.id}`, cliente, {headers: this.httpHeaders})
       .pipe(
-        map((response: any) => response.cliente as Cliente)
+        map((response: any) => response.cliente as Cliente),
+        catchError(e => {
+
+          if (e.status === 400) {
+            return throwError(e);
+          }
+
+          Swal.fire(
+            e.error.mensaje,
+            e.error.error,
+            'error'
+          );
+          return throwError(e);
+        })
       );
   }
 
@@ -83,8 +101,8 @@ export class ClienteService {
           );
           return throwError(e);
         })).pipe(
-          map(response => response as Cliente)
-        );
+        map(response => response as Cliente)
+      );
   }
 
 }

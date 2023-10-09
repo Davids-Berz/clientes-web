@@ -18,6 +18,7 @@ export class FormComponent implements OnInit {
 
   private cliente: Cliente = new Cliente();
   private titulo = 'Crear Cliente';
+  errores: string [];
 
   ngOnInit() {
     this.cargarCliente();
@@ -28,6 +29,10 @@ export class FormComponent implements OnInit {
       cliente => {
         this.router.navigate(['/clientes']);
         this.msjSuccess(`Cliente ${cliente.nombre} creado con exito!`);
+      }, err => {
+        this.errores = err.error.error;
+        console.log('Codigo error Backend: ', this.errores);
+        console.log('status: ', err.status);
       }
     );
   }
@@ -48,6 +53,10 @@ export class FormComponent implements OnInit {
       cliente => {
         this.router.navigate(['/clientes']);
         this.msjSuccess(`Cliente ${cliente.nombre} actualizado con exito!`);
+      }, error => {
+        this.errores = error.error.errores;
+        console.log('Codigo error Backend: ', error.error);
+        console.log('status: ', error.status);
       }
     );
   }
